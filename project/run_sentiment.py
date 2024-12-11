@@ -66,13 +66,13 @@ class CNNSentimentKim(minitorch.Module):
         self.conv1d2 = Conv1d(embedding_size, feature_map_size, filter_sizes[1])
         self.conv1d3 = Conv1d(embedding_size, feature_map_size, filter_sizes[2])
         self.linear = Linear(self.feature_map_size, 1)
-        
+
     def forward(self, embeddings):
         """
         embeddings tensor: [batch x sentence length x embedding dim]
         """
         # TODO: Implement for Task 4.5.
-        embeddings = embeddings.permute(0, 2, 1) 
+        embeddings = embeddings.permute(0, 2, 1)
         conv1 = self.conv1d1.forward(embeddings).relu()
         conv2 = self.conv1d2.forward(embeddings).relu()
         conv3 = self.conv1d3.forward(embeddings).relu()
