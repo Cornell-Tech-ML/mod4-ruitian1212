@@ -15,6 +15,7 @@ class SGD(Optimizer):
         self.lr = lr
 
     def zero_grad(self) -> None:
+        """Zero gradient method"""
         for p in self.parameters:
             if p.value is None:
                 continue
@@ -26,6 +27,7 @@ class SGD(Optimizer):
                     p.value.grad = None
 
     def step(self) -> None:
+        """A step of SGD"""
         for p in self.parameters:
             if p.value is None:
                 continue

@@ -30,12 +30,17 @@ class Module:
         return list(m.values())
 
     def train(self) -> None:
-        """Set the mode of this module and all descendent modules to `train`."""
-        raise NotImplementedError("Need to include this file from past assignment.")
+        """Set the `training` flag of this and descendent to true."""
+        for child in self.modules():
+            child.train()
+        self.training = True
 
     def eval(self) -> None:
-        """Set the mode of this module and all descendent modules to `eval`."""
-        raise NotImplementedError("Need to include this file from past assignment.")
+        """Set the `training` flag of this and descendent to false."""
+        # TODO: Implement for Task 0.4.
+        for child in self.modules():
+            child.eval()
+        self.training = False
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """Collect all the parameters of this module and its descendents.
@@ -45,11 +50,26 @@ class Module:
             The name and `Parameter` of each ancestor parameter.
 
         """
-        raise NotImplementedError("Need to include this file from past assignment.")
+        # TODO: Implement for Task 0.4.
+        parameters: Dict[str, Parameter] = dict()
+        for name, parameter in self._parameters.items():
+            parameters[name] = parameter
+
+        for child_module_name, child_module in self._modules.items():
+            parameters.update(
+                {
+                    f"{child_module_name}.{name}": parameter
+                    for name, parameter in child_module.named_parameters()
+                }
+            )
+
+        return list(parameters.items())
 
     def parameters(self) -> Sequence[Parameter]:
         """Enumerate over all the parameters of this module and its descendents."""
-        raise NotImplementedError("Need to include this file from past assignment.")
+        # TODO: Implement for Task 0.4.
+        named_parameter = self.named_parameters()
+        return [parameter for _, parameter in named_parameter]
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """Manually add a parameter. Useful helper for scalar parameters.
@@ -85,6 +105,7 @@ class Module:
         return None
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        """Enable the module to be called like a function. This will method will delegate to the forward method"""
         return self.forward(*args, **kwargs)
 
     def __repr__(self) -> str:
